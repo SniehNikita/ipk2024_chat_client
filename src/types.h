@@ -1,3 +1,9 @@
+/**
+ * @file types.h
+ * @author Sniehovskyi Nikita (xsnieh00)
+ * @date 16.03.2024
+ * @brief Header file for types declaration
+ */
 
 #ifndef __TYPES_H__
 

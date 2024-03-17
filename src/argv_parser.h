@@ -1,5 +1,5 @@
 /**
- * @file err_out.c
+ * @file argv_parser.h
  * @author Sniehovskyi Nikita (xsnieh00)
  * @date 16.03.2024
  * @brief Header file for argument parser (argv_parser.c)
