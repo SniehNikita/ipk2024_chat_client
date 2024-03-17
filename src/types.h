@@ -24,10 +24,10 @@ typedef enum {
  */
 typedef struct argv_t {
     transport_protocol protocol;
-    unsigned char host[256];
+    char host[256];
     uint16_t port;
     uint16_t udp_timeout;
-    uint8_t upd_retransmission;
+    uint8_t udp_retransmission;
 } argv_t;
 
 #endif

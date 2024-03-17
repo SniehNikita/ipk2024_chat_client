@@ -18,6 +18,9 @@
 
 #include "err_out.h"
 #include "types.h"
+#include "argv_parser.h"
+
+int errno = 0;
 
 /**
  * @brief Pointer to parsed arguments structure 
@@ -30,5 +33,12 @@ argv_t * argv_p;
  * @param signal Signal received from the system
  */
 void  sigintHandler(int signal);
+
+/**
+ * @brief Exits as standard exit() function but with freeing of memory
+ * 
+ * @param exit_code Exit code
+ */
+void stop(int exit_code);
 
 #endif

@@ -7,12 +7,20 @@
 
 #include "main.h"
 
+int aaa() {
+    int a = 1;
+    return a = 2;
+}
+
+
 int main(int argc, char **argv) {
     argv_p = malloc(sizeof(argv_t));
 
     signal(SIGINT, sigintHandler);
-    optRead(argc, argv, argv_p);   
-    
+    if (argvParse(argc, argv, argv_p)) {
+        stop(errno);
+    }
+
     free(argv_p);    
     return 0;
 }
@@ -21,4 +29,9 @@ void sigintHandler(int signal) {
     printf("\nProgram ended with %d signal\n", signal);
     free(argv_p);
     exit(0);
+}
+
+void stop(int exit_code) {
+    free(argv_p);
+    exit(exit_code);
 }

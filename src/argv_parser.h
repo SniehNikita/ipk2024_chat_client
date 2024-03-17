@@ -17,6 +17,8 @@
 #include "err_out.h"
 #include "types.h"
 
+extern int errno;
+
 /**
  * @brief Parses parameters
  * 
@@ -25,7 +27,7 @@
  * @param argv_p Pointer to argument structure
  * @return int Result code
  */
-int optRead(int argc, char **argv, argv_t *argv_p);
+int argvParse(int argc, char **argv, argv_t *argv_p);
 
 /**
  * @brief Prints help to stdin
