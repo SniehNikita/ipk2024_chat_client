@@ -56,7 +56,7 @@ typedef uint8_t t_msg_id;
 /**
  * @brief Common string (for message content etc.) 
  */
-typedef char t_string[STR_MAX_LEN];
+typedef unsigned char t_string[STR_MAX_LEN];
 
 /**
  * @brief Content of confirm message 
