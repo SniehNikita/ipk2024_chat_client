@@ -120,4 +120,12 @@ typedef struct t_msg {
     t_msg_content content;
 } t_msg;
 
+/**
+ * @brief States of messages in network communication 
+ */
+typedef enum {
+    e_sent = 0,
+    e_confirmed = 1
+} t_msg_net_state;
+
 #endif
