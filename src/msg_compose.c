@@ -25,8 +25,8 @@ int compose(t_msg msg, t_string * send, int * len) {
 int compose_confirm(t_msg msg, t_string * send, int * len) {
     *len = 3;
     (*send)[0] = e_confirm;
-    (*send)[1] = msg.content.confirm.ref_id & 0xFF00;
-    (*send)[2] = msg.content.confirm.ref_id & 0x00FF;
+    (*send)[1] = (msg.content.confirm.ref_id / 10) % 10;
+    (*send)[2] = msg.content.confirm.ref_id % 10;
 
     return 0;
 }
@@ -35,11 +35,11 @@ int compose_reply(t_msg msg, t_string * send, int * len) {
     int index;
     int added_len = 0;
     (*send)[0] = e_reply;
-    (*send)[1] = msg.id & 0xFF00;
-    (*send)[2] = msg.id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
     (*send)[3] = msg.content.reply.result;
-    (*send)[4] = msg.content.reply.ref_id & 0xFF00;
-    (*send)[5] = msg.content.reply.ref_id & 0x00FF;
+    (*send)[4] = (msg.content.reply.ref_id / 10) % 10;
+    (*send)[5] = msg.content.reply.ref_id % 10;
     index = 6;
     compose_string(&(*send),msg.content.reply.content, index, &added_len);
     index += added_len;
@@ -53,8 +53,8 @@ int compose_auth(t_msg msg, t_string * send, int * len) {
     int index;
     int added_len = 0;
     (*send)[0] = e_auth;
-    (*send)[1] = msg.id & 0xFF00;
-    (*send)[2] = msg.id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
     index = 3;
     compose_string(&(*send),msg.content.auth.user_name, index, &added_len);
     index += added_len;
@@ -75,8 +75,8 @@ int compose_join(t_msg msg, t_string * send, int * len) {
     int index;
     int added_len = 0;
     (*send)[0] = e_join;
-    (*send)[1] = msg.id & 0xFF00;
-    (*send)[2] = msg.id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
     index = 3;
     compose_string(&(*send),msg.content.join.channel_id, index, &added_len);
     index += added_len;
@@ -94,8 +94,8 @@ int compose_msg(t_msg msg, t_string * send, int * len) {
     int index;
     int added_len = 0;
     (*send)[0] = e_msg;
-    (*send)[1] = msg.id & 0xFF00;
-    (*send)[2] = msg.id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
     index = 3;
     compose_string(&(*send),msg.content.msg.display_name, index, &added_len);
     index += added_len;
@@ -113,8 +113,8 @@ int compose_err(t_msg msg, t_string * send, int * len) {
     int index;
     int added_len = 0;
     (*send)[0] = e_err;
-    (*send)[1] = msg.id & 0xFF00;
-    (*send)[2] = msg.id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
     index = 3;
     compose_string(&(*send),msg.content.err.display_name, index, &added_len);
     index += added_len;
@@ -131,8 +131,8 @@ int compose_err(t_msg msg, t_string * send, int * len) {
 int compose_bye(t_msg msg, t_string * send, int * len) {
     *len = 3;
     (*send)[0] = e_bye;
-    (*send)[1] = msg.content.confirm.ref_id & 0xFF00;
-    (*send)[2] = msg.content.confirm.ref_id & 0x00FF;
+    (*send)[1] = (msg.id / 10) % 10;
+    (*send)[2] = msg.id % 10;
 
     return 0;
 }
@@ -145,6 +145,6 @@ int compose_string(t_string * dst, t_string src, int index, int * len) {
         index++;
     }
     *len = i;
-    
+
     return 0;
 }
