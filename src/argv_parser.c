@@ -7,7 +7,7 @@
 
 #include "argv_parser.h"
 
-int argvParse(int argc, char **argv, argv_t *argv_p) {
+int argvParse(int argc, char **argv, t_argv *argv_p) {
     int curr_opt = 1;
     bool is_protocol = false;
     bool is_host = false;
@@ -22,9 +22,9 @@ int argvParse(int argc, char **argv, argv_t *argv_p) {
             return 1;
         } else if (!strcmp(argv[curr_opt], "-t")) {
             if (!strcmp(argv[curr_opt+1], "tcp")) {
-                argv_p->protocol = tcp;
+                argv_p->protocol = e_tcp;
             } else {
-                argv_p->protocol = udp;
+                argv_p->protocol = e_udp;
             }
             is_protocol = true;
             curr_opt++;

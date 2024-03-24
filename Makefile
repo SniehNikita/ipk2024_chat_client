@@ -9,11 +9,11 @@ SRCDIR = src/
 OBJDIR = objs/
 
 # HEADS = $(wildcard $(SRCDIR)*.h)
-HEADS = src/err_out.h src/main.h src/argv_parser.h
+HEADS = src/err_out.h src/main.h src/argv_parser.h src/client.h src/msg_parse.h src/msg_compose.h
 # SRCS = $(wildcard $(SRCDIR)*.c)
-SRCS = src/err_out.c src/main.c src/argv_parser.c
+SRCS = src/err_out.c src/main.c src/argv_parser.c src/client.c src/msg_parse.c src/msg_compose.c
 # OBJS = $(patsubst $(SRCDIR)%.c,$(OBJDIR)%.o,$(SRCS))
-OBJS = objs/err_out.o objs/main.o objs/argv_parser.o
+OBJS = objs/err_out.o objs/main.o objs/argv_parser.o objs/client.o objs/msg_parse.o objs/msg_compose.o
 
 all: clear build
 
@@ -31,7 +31,11 @@ $(OBJDIR)%.o: $(SRCDIR)%.c
 mkobjdir:
 	mkdir -p $(OBJDIR)
 
-# valgrind:
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all ./ipk24chat-client -t udp -s 114.101.0.1 -p 12345 -d 250 -r 3
+
+udp: clear build
+	./ipk24chat-client -t udp -s 114.101.0.1 -p 12345 -d 250 -r 3
 
 clear:
 	rm -rf $(OBJDIR)

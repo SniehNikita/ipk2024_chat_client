@@ -27,7 +27,7 @@ extern int errno;
  * @param argv_p Pointer to argument structure
  * @return int Result code
  */
-int argvParse(int argc, char **argv, argv_t *argv_p);
+int argvParse(int argc, char **argv, t_argv *argv_p);
 
 /**
  * @brief Prints help to stdin

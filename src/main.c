@@ -7,17 +7,15 @@
 
 #include "main.h"
 
-int aaa() {
-    int a = 1;
-    return a = 2;
-}
-
-
 int main(int argc, char **argv) {
-    argv_p = malloc(sizeof(argv_t));
+    argv_p = malloc(sizeof(t_argv));
 
     signal(SIGINT, sigintHandler);
     if (argvParse(argc, argv, argv_p)) {
+        stop(errno);
+    }
+
+    if (client(argv_p)) {
         stop(errno);
     }
 

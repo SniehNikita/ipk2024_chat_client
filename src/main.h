@@ -19,13 +19,18 @@
 #include "err_out.h"
 #include "types.h"
 #include "argv_parser.h"
+#include "client.h"
 
 int errno = 0;
+/**
+ * @brief SIGPIPE signal (might be set directly in the program). If appeared - program is stopped
+ */
+bool is_sigpipe = false;
 
 /**
  * @brief Pointer to parsed arguments structure 
  */
-argv_t * argv_p;
+t_argv * argv_p;
 
 /**
  * @brief Hadler for sigint signal

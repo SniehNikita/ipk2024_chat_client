@@ -16,6 +16,8 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
     }
     switch (errno) {
         case err_malformed_arguments: fprintf(stderr, "Malformed arguments");break;
+        case err_socket_creation_failed: fprintf(stderr, "Socket creation failed");break;
+        case err_host_not_found: fprintf(stderr, "Host doesn't exist");break;
         default: fprintf(stderr, "Unknown error");break;
     }
     if (msg != NULL) {
@@ -33,6 +35,8 @@ void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
         fprintf(stderr, ": ");
     }
     switch (warno) {
+        case warn_net_receive_failed: fprintf(stderr, "recvfrom funtion failed");break;
+        case warn_net_send_failed: fprintf(stderr, "sendto function failed");break;
         default: fprintf(stderr, "Unknown warning");break;
     }
     if (msg != NULL) {
