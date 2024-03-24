@@ -15,9 +15,11 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
         fprintf(stderr, ": ");
     }
     switch (errno) {
+        case err_string_overflow: fprintf(stderr, "Max string length overflowed");break;
         case err_malformed_arguments: fprintf(stderr, "Malformed arguments");break;
         case err_socket_creation_failed: fprintf(stderr, "Socket creation failed");break;
-        case err_host_not_found: fprintf(stderr, "Host doesn't exist");break;
+        case err_msg_null: fprintf(stderr, "Message is null");break;
+        case err_msg_type_unknown: fprintf(stderr, "Message type is unknown");break;
         default: fprintf(stderr, "Unknown error");break;
     }
     if (msg != NULL) {

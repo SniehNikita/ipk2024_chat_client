@@ -14,6 +14,8 @@
 #include "err_out.h"
 #include "types.h"
 
+extern int errno;
+
 /**
  * @brief Main parsing function 
  * 
@@ -23,5 +25,75 @@
  * @return int Result code
  */
 int parse(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses confirm message
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_confirm(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses reply message
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_reply(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses auth message 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_auth(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses join message 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_join(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses msg message 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_msg(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses err message 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_err(t_string * recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses bye message 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_bye(t_string * recv, int len, t_msg * msg);
 
 #endif

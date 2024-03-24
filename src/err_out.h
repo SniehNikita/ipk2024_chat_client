@@ -14,11 +14,16 @@
 #include <stdio.h>
 
 typedef enum {
+    // Common
+    err_string_overflow = 1,
     // Arguments
     err_malformed_arguments = 100,
     // UDP client
     err_socket_creation_failed = 200,
-    err_host_not_found = 201
+    err_host_not_found = 201,
+    // Parser
+    err_msg_null = 400,
+    err_msg_type_unknown = 401
 } error_code;
 typedef enum {
     warn_net_receive_failed = 200,

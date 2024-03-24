@@ -28,6 +28,7 @@
 
 
 extern int errno;
+
 /**
  * @brief SIGPIPE signal (might be set directly in the program). If appeared - program is stopped
  */

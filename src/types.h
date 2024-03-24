@@ -59,6 +59,13 @@ typedef uint8_t t_msg_id;
 typedef char t_string[STR_MAX_LEN];
 
 /**
+ * @brief Content of confirm message 
+ */
+typedef struct t_msg_content_confirm {
+    t_msg_id ref_id;
+} t_msg_content_confirm;
+
+/**
  * @brief Content of reply message 
  */
 typedef struct t_msg_content_reply {
@@ -104,6 +111,7 @@ typedef struct t_msg_content_err {
  * @brief Union of all possible message contents 
  */
 typedef union t_msg_content {
+    t_msg_content_confirm confirm;
     t_msg_content_reply reply;
     t_msg_content_auth auth;
     t_msg_content_join join;
