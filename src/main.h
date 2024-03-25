@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <signal.h>
+#include <poll.h>
 
 #include "err_out.h"
 #include "types.h"
@@ -28,9 +29,14 @@ int errno = 0;
 bool is_sigpipe = false;
 
 /**
- * @brief Pointer to parsed arguments structure 
+ * @brief Counter for local messages 
  */
-t_argv * argv_p;
+int lcl_msg_count = 0;
+
+/**
+ * @brief User data 
+ */
+t_user user;
 
 /**
  * @brief Hadler for sigint signal
@@ -38,6 +44,15 @@ t_argv * argv_p;
  * @param signal Signal received from the system
  */
 void  sigintHandler(int signal);
+
+/**
+ * @brief Routes command execution
+ * 
+ * @param cmd Command
+ * @param msg Result message (e_null if was not used)
+ * @return int Result code
+ */
+int exec(t_command cmd, t_msg * msg);
 
 /**
  * @brief Exits as standard exit() function but with freeing of memory

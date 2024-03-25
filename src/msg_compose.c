@@ -67,6 +67,7 @@ int compose_auth(t_msg msg, t_string * send, int * len) {
     compose_string(send,msg.content.auth.secret, index, &added_len);
     index += added_len;
     *len = index;
+    (*len)++;
 
     return 0;
 }

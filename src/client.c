@@ -9,93 +9,82 @@
 
 int socket_fd;
 struct sockaddr_in addr;
-socklen_t addr_size;
-/**
- * @brief Is any response from server is expected 
- */
-bool is_await = false;
+int protocol;
 
-int client(t_argv * argv) {
+int client(t_argv argv, int * fd) {
     struct hostent * server_ip;
 
-    server_ip = gethostbyname(argv->host);
+    protocol = argv.protocol;
+    server_ip = gethostbyname(argv.host);
     if (server_ip == NULL) {
         return errno = printErrMsg(err_host_not_found, __LINE__, __FILE__, NULL);
     }
 
     memset(&addr, 0, sizeof(addr));
     addr.sin_family = AF_INET;
-    addr.sin_addr.s_addr = inet_addr(argv->host);
-    addr.sin_port = htons(argv->port);
+    addr.sin_addr.s_addr = inet_addr(argv.host);
+    addr.sin_port = htons(argv.port);
     memcpy(&addr.sin_addr.s_addr, server_ip->h_addr_list[0], server_ip->h_length);
-    addr_size = sizeof(addr);
 
-    if (argv->protocol == e_udp) {
-        udp_client(argv);
+    if (protocol == e_udp) {
+        if (udp_client(argv)) { return errno; }
     } else {
-        tcp_client(argv);
+        if (tcp_client(argv)) { return errno; }
     }
+    *fd = socket_fd;
 
     return 0;
 }
 
-int udp_client(t_argv * argv) {
-    t_string recv_bytes;
-    t_string send_bytes;
-    t_msg msg_recv;
-    t_msg msg_send;
+int client_send(t_string buf, int buf_size) {
+    if (protocol == e_udp) {
+        if (udp_send(buf, buf_size)) { return errno; }
+    } else {
+        if (tcp_send(buf, buf_size)) { return errno; }
+    }
+    return 0;
+}
 
+int cliend_read(t_string * buf, int * buf_size) {
+    if (protocol == e_udp) {
+        if (udp_read(buf, buf_size)) { return errno; }
+    } else {
+        if (tcp_read(buf, buf_size)) { return errno; }
+    }
+    return 0;
+}
+
+int udp_client() {
     socket_fd = socket(AF_INET, SOCK_DGRAM, 0);
     if (socket_fd <= 0) {
         return errno = printErrMsg(err_socket_creation_failed, __LINE__, __FILE__, NULL);
     }
-    
-    while (!is_sigpipe) {
-        int len = 0;
-        memset(&msg_recv, 0, sizeof(msg_recv));
-        memset(&msg_send, 0, sizeof(msg_send));
-
-        if (is_await) {
-            addr_size = sizeof(addr);
-            len = recvfrom(socket_fd, &recv_bytes, STR_MAX_LEN, 0, (struct sockaddr * ) &addr, &addr_size);
-            if (len < 0) {
-                printWarnMsg(warn_net_receive_failed, __LINE__, __FILE__, NULL);
-                continue;
-            }
-        }
-        
-        if (parse(&recv_bytes, len, &msg_recv)) {
-            return errno;
-        }
-        printf("Received: %s\n", recv_bytes);
-        // TODO check if already exists
-        
-        if (process(msg_recv, &msg_send)) {
-            return errno;
-        }
-        
-        len = 0;
-        if (compose(msg_send, &send_bytes, &len)) {
-            return errno;
-        }
-        memcpy(&send_bytes, "Hello", 6);
-        if (sendto(socket_fd, send_bytes, len, 0, (struct sockaddr * ) &addr, sizeof(addr)) < 0) {
-            printWarnMsg(warn_net_send_failed, __LINE__, __FILE__, NULL);
-            continue;
-        }
-
-        is_sigpipe = true;
-    }
 
     return 0;
 }
 
-int process(t_msg msg_recv, t_msg * msg_send) {
+int udp_send(t_string buf, int buf_size) {
+    sendto(socket_fd, buf, buf_size, 0, (struct sockaddr * ) &addr, sizeof(addr));
+    return 0;
+}
+
+int udp_read(t_string * buf, int * buf_size) {
+    socklen_t addr_size = sizeof(addr);
+    *buf_size = recvfrom(socket_fd, buf, STR_MAX_LEN, 0, (struct sockaddr * ) &addr, &addr_size);
+    return 0;
+}
+
+int tcp_send(t_string buf, int buf_size) {
 
     return 0;
 }
 
-int tcp_client(t_argv * argv) {
+int tcp_client(t_argv argv) {
+
+    return 0;
+}
+
+int tcp_read(t_string * buf, int * buf_size) {
 
     return 0;
 }

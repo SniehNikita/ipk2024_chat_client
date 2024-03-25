@@ -29,6 +29,7 @@
 
 
 extern int errno;
+extern int lcl_msg_count;
 
 /**
  * @brief SIGPIPE signal (might be set directly in the program). If appeared - program is stopped
@@ -36,36 +37,81 @@ extern int errno;
 extern bool is_sigpipe;
 
 /**
- * @brief Main method for client creation
+ * @brief Routes fd creation
+ * 
+ * @param argv Parsed program arguments
+ * @param fd Result fd
+ * @return Result code
+ */
+int client(t_argv argv, int * fd);
+
+/**
+ * @brief Routes message send
+ * 
+ * @param buf Result message
+ * @param buf_size Result message length
+ * @return int Result code
+ */
+int client_send(t_string buf, int buf_size);
+
+/**
+ * @brief Routes message read
+ * 
+ * @param buf Result message
+ * @param buf_size Result message length
+ * @return int Result code
+ */
+int cliend_read(t_string * buf, int * buf_size);
+
+/**
+ * @brief Creates UDP fd
+ * 
+ * @return Result code
+ */
+int udp_client();
+
+/**
+ * @brief Sends UDP message
+ * 
+ * @param buf Message to be send
+ * @param buf_size Length of message to be send
+ * @return int Result code
+ */
+int udp_send(t_string buf, int buf_size);
+
+/**
+ * @brief Reads UDP message
+ * 
+ * @param buf Result message
+ * @param buf_size Result message length
+ * @return int Result code
+ */
+int udp_read(t_string * buf, int * buf_size);
+
+/**
+ * @brief Creates TCP fd
  * 
  * @param argv Parsed program arguments
  * @return Result code
  */
-int client(t_argv * argv);
+int tcp_client(t_argv argv);
 
 /**
- * @brief UDP client variant
+ * @brief Sends TCP message
  * 
- * @param argv Parsed program arguments
- * @return Result code
+ * @param buf Message to be send
+ * @param buf_size Length of message to be send
+ * @return int Result code
  */
-int udp_client(t_argv * argv);
+int tcp_send(t_string buf, int buf_size);
 
 /**
- * @brief TCP client variant
+ * @brief Reads TCP message
  * 
- * @param argv Parsed program arguments
- * @return Result code
+ * @param buf Result message
+ * @param buf_size Result message length
+ * @return int Result code
  */
-int tcp_client(t_argv * argv);
-
-/**
- * @brief Message process for both tcp and udp
- * 
- * @param msg_recv Message received from server
- * @param msg_send Result message (will be sent as response)
- * @return int 
- */
-int process(t_msg msg_recv, t_msg * msg_send);
+int tcp_read(t_string * buf, int * buf_size);
 
 #endif

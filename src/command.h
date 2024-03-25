@@ -18,6 +18,8 @@
 #include "types.h"
 
 extern int errno;
+extern int lcl_msg_count;
+extern t_user user;
 
 /**
  * @brief Main function. Gets command from user and parses it
@@ -71,5 +73,38 @@ int cmd_parse_rename(t_command * command, t_command_argv cmd_argv);
  * @return int Result code
  */
 int split_argv(t_command_argv * cmd_argv, t_string cmd);
+
+/**
+ * @brief Executes help command
+ * 
+ * @return int Result code
+ */
+int exec_help();
+
+/**
+ * @brief Executes auth command
+ * 
+ * @param cmd Auth command
+ * @param msg Result message
+ * @return int Result code
+ */
+int exec_auth(t_command cmd, t_msg * msg);
+
+/**
+ * @brief Executes join command
+ * 
+ * @param cmd Join command
+ * @param msg Result message
+ * @return int Result code
+ */
+int exec_join(t_command cmd, t_msg * msg);
+
+/**
+ * @brief Executes rename command
+ * 
+ * @param cmd Rename command
+ * @return int Result code
+ */
+int exec_rename(t_command cmd);
 
 #endif

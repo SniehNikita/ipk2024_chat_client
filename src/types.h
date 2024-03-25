@@ -50,7 +50,8 @@ typedef enum {
     e_join = 0x03,
     e_msg = 0x04,
     e_err = 0xFE,
-    e_bye = 0xFF
+    e_bye = 0xFF,
+    e_null = 0xF0
 } t_msg_type;
 
 /**
@@ -145,11 +146,12 @@ typedef enum {
  * @brief Types of available commands 
  */
 typedef enum {
-    e_cmd_msg = 0,
-    e_cmd_auth = 1,
-    e_cmd_join = 2,
-    e_cmd_rename = 3,
-    e_cmd_help = 4
+    e_cmd_null = 0,
+    e_cmd_msg = 1,
+    e_cmd_auth = 2,
+    e_cmd_join = 3,
+    e_cmd_rename = 4,
+    e_cmd_help = 5
 } t_command_type;
 
 /**
@@ -204,5 +206,24 @@ typedef struct t_command {
  * @brief Array of command arguments 
  */
 typedef t_string t_command_argv[CMD_MAX_ARGV];
+
+typedef enum {
+    e_state_null = 0,
+    e_state_start = 1,
+    e_state_auth = 2,
+    e_state_open = 3,
+    e_state_error = 4,
+    e_state_end = 5
+} t_state;
+
+/**
+ * @brief User data 
+ */
+typedef struct t_user {
+    t_string user_name;
+    t_string display_name;
+    t_string channel_id;
+    t_state state;
+} t_user;
 
 #endif
