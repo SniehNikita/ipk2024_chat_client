@@ -17,6 +17,11 @@
 #define STR_MAX_LEN 65536
 
 /**
+ * @brief Maximum number of parameters in command 
+ */
+#define CMD_MAX_ARGV 4
+
+/**
  * @brief Protocol type 
  */
 typedef enum {
@@ -56,7 +61,7 @@ typedef uint8_t t_msg_id;
 /**
  * @brief Common string (for message content etc.) 
  */
-typedef unsigned char t_string[STR_MAX_LEN];
+typedef char t_string[STR_MAX_LEN];
 
 /**
  * @brief Content of confirm message 
@@ -135,5 +140,69 @@ typedef enum {
     e_sent = 0,
     e_confirmed = 1
 } t_msg_net_state;
+
+/**
+ * @brief Types of available commands 
+ */
+typedef enum {
+    e_cmd_msg = 0,
+    e_cmd_auth = 1,
+    e_cmd_join = 2,
+    e_cmd_rename = 3,
+    e_cmd_help = 4
+} t_command_type;
+
+/**
+ * @brief Message command type 
+ */
+typedef struct t_command_msg {
+    t_string msg;
+} t_command_msg;
+
+/**
+ * @brief Authorization command type 
+ */
+typedef struct t_command_auth {
+    t_string user_name;
+    t_string display_name;
+    t_string secret;
+} t_command_auth;
+
+/**
+ * @brief Join command type 
+ */
+typedef struct t_command_join {
+    t_string channel_id;
+} t_command_join;
+
+/**
+ * @brief Rename command type 
+ */
+typedef struct t_command_rename {
+    t_string display_name;
+} t_command_rename;
+
+/**
+ * @brief Unified command content 
+ */
+typedef union t_command_content {
+    t_command_msg msg;
+    t_command_auth auth;
+    t_command_join join;
+    t_command_rename rename;
+} t_command_content;
+
+/**
+ * @brief Unified command type 
+ */
+typedef struct t_command {
+    t_command_type type;
+    t_command_content content;
+} t_command;
+
+/**
+ * @brief Array of command arguments 
+ */
+typedef t_string t_command_argv[CMD_MAX_ARGV];
 
 #endif

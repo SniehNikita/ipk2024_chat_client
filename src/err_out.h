@@ -23,11 +23,15 @@ typedef enum {
     err_host_not_found = 201,
     // Parser
     err_msg_null = 400,
-    err_msg_type_unknown = 401
+    err_msg_type_unknown = 401,
+    // Command
+    err_cmd_corrupted = 500,
+    err_command_not_found = 501
 } error_code;
 typedef enum {
     warn_net_receive_failed = 200,
-    warn_net_send_failed = 201
+    warn_net_send_failed = 201,
+    warn_too_many_argv = 500
 } warning_code;
 
 /**

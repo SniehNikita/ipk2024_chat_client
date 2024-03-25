@@ -11,7 +11,7 @@ int parse(t_string * recv, int len, t_msg * msg) {
     if (len <= 0) {
         return errno = printErrMsg(err_msg_null, __LINE__, __FILE__, NULL);
     }
-    switch ((*recv)[0]) {
+    switch ((unsigned char)(*recv)[0]) {
         case e_confirm: return parse_confirm(recv, msg); break;
         case e_reply: return parse_reply(recv, msg); break;
         case e_auth: return parse_auth(recv, msg); break;

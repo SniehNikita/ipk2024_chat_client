@@ -23,6 +23,7 @@
 
 #include "err_out.h"
 #include "types.h"
+#include "command.h"
 #include "msg_parse.h"
 #include "msg_compose.h"
 
