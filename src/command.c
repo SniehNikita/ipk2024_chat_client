@@ -12,9 +12,7 @@ int get_command(t_command * command) {
 
     memset(cmd, 0x00, STR_MAX_LEN);
     fgets(cmd, STR_MAX_LEN, stdin);
-    parse_cmd(command, cmd);
-
-    return 0;
+    return parse_cmd(command, cmd);
 }
 
 int parse_cmd(t_command * command, t_string cmd) {
@@ -29,14 +27,23 @@ int parse_cmd(t_command * command, t_string cmd) {
     split_argv(&cmd_argv, cmd);
     if (!strcmp(cmd_argv[0], "/auth")) {
         cmd_parse_auth(command, cmd_argv);
+        if (!strcmp(cmd_argv[1], "") || !strcmp(cmd_argv[2], "") || !strcmp(cmd_argv[3], "")) {
+            return printWarnMsg(warn_not_enough_argv, __LINE__, __FILE__, NULL);
+        }
     } else if (!strcmp(cmd_argv[0], "/join")) {
         cmd_parse_join(command, cmd_argv);
+        if (!strcmp(cmd_argv[1], "")) {
+            return printWarnMsg(warn_not_enough_argv, __LINE__, __FILE__, NULL);
+        }
     } else if (!strcmp(cmd_argv[0], "/rename")) {
         cmd_parse_rename(command, cmd_argv);
+        if (!strcmp(cmd_argv[1], "")) {
+            return printWarnMsg(warn_not_enough_argv, __LINE__, __FILE__, NULL);
+        }
     } else if (!strcmp(cmd_argv[0], "/help")) {
         command->type = e_cmd_help;
     } else {
-        return errno = printErrMsg(err_command_not_found, __LINE__, __FILE__, NULL);
+        return printWarnMsg(warn_command_not_found, __LINE__, __FILE__, NULL);
     }
 
     return 0;
@@ -86,6 +93,13 @@ int split_argv(t_command_argv * cmd_argv, t_string cmd) {
     return 0;
 }
 
+int exec_msg(t_command cmd, t_msg * msg) {
+    memcpy(msg->content.msg.msg, cmd.content.msg.msg, STR_MAX_LEN);
+    memcpy(msg->content.msg.display_name, user.display_name, STR_MAX_LEN);
+
+    return 0;
+}
+
 int exec_help() {
     printf("Type any message and press enter to send message to selected channel.\nUse only a-zA-Z0-9_ symbols.\nCommand starts with \'/\'.\nList of available commands:\n - /help : Shows this message\n - /auth {Username} {Secret} {DisplayName} : authorize on server\n - /join {ChannelID} : join channel\n - /rename {DisplayName} : change your display name\n");
 
@@ -94,7 +108,7 @@ int exec_help() {
 
 int exec_auth(t_command cmd, t_msg * msg) {
     msg->type = e_auth;
-    msg->id = lcl_msg_count++;
+    msg->id = client_msg_count++;
     memcpy(msg->content.auth.user_name, cmd.content.auth.user_name, STR_MAX_LEN);
     memcpy(msg->content.auth.secret, cmd.content.auth.secret, STR_MAX_LEN);
     memcpy(msg->content.auth.display_name, cmd.content.auth.display_name, STR_MAX_LEN);
@@ -107,7 +121,7 @@ int exec_auth(t_command cmd, t_msg * msg) {
 
 int exec_join(t_command cmd, t_msg * msg) {
     msg->type = e_join;
-    msg->id = lcl_msg_count++;
+    msg->id = client_msg_count++;
     memcpy(msg->content.join.channel_id, cmd.content.join.channel_id, STR_MAX_LEN);
     memcpy(msg->content.auth.display_name, user.display_name, STR_MAX_LEN);
 

@@ -1,7 +1,7 @@
 /**
  * @file state.c
  * @author Sniehovskyi Nikita (xsnieh00)
- * @date 16.03.2024
+ * @date 26.03.2024
  * @brief Resolves states operation of automata
  */
 
@@ -13,8 +13,8 @@ int get_next_state(int cur_state, t_msg msg) {
         case e_state_start: return next_state_start(msg.type); break;
         case e_state_auth: return next_state_auth(msg.type, msg.content.reply.result); break;
         case e_state_open: return next_state_open(msg.type); break;
-        case e_state_err: return next_state_err(msg.type); break;
-        case e_state_end: return next_state_end(msg.type); break; 
+        case e_state_err: return next_state_err(); break;
+        case e_state_end: return next_state_end(); break; 
     }
     return e_state_null;
 }
@@ -47,10 +47,10 @@ int next_state_open(int msg_type) {
     return e_state_null;
 }
 
-int next_state_err(int msg_type) {
+int next_state_err() {
     return e_state_end;
 }
 
-int next_state_end(int msg_type) {
+int next_state_end() {
     return e_state_end;
 }

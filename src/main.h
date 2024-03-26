@@ -21,6 +21,8 @@
 #include "types.h"
 #include "argv_parser.h"
 #include "client.h"
+#include "queue.h"
+#include "state.h"
 
 int errno = 0;
 /**
@@ -31,7 +33,7 @@ bool is_sigpipe = false;
 /**
  * @brief Counter for local messages 
  */
-int lcl_msg_count = 0;
+int client_msg_count = 0;
 
 /**
  * @brief User data 
@@ -39,11 +41,28 @@ int lcl_msg_count = 0;
 t_user user;
 
 /**
+ * @brief Client messages records 
+ */
+t_queue * client_msg_queue;
+
+/**
+ * @brief Server messages records 
+ */
+t_queue * server_msg_queue;
+
+/**
  * @brief Hadler for sigint signal
  * 
  * @param signal Signal received from the system
  */
 void  sigintHandler(int signal);
+
+/**
+ * @brief Processes command event
+ * 
+ * @return int Result code
+ */
+int process_command();
 
 /**
  * @brief Routes command execution

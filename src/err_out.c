@@ -32,7 +32,7 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
     return errno;
 }
 
-void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
+int printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
     fprintf(stderr, "ERR: ");
     fprintf(stderr, "Warning [%d] on line [%d]", warno, lineno);    
     if (file_name != NULL) {
@@ -45,6 +45,7 @@ void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
         case warn_net_send_failed: fprintf(stderr, "sendto function failed");break;
         case warn_too_many_argv: fprintf(stderr, "Too many arguments");break;
         case warn_command_not_found: fprintf(stderr, "Command not found. Use /help");break;
+        case warn_not_enough_argv: fprintf(stderr, "Not enough arguments. Use /help");break;
         case warn_invalid_state_transition: fprintf(stderr, "Invalid state transition was ignored");break;
         default: fprintf(stderr, "Unknown warning");break;
     }
@@ -52,4 +53,5 @@ void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
         fprintf(stderr, ". With message [%s]", msg);
     }
     fprintf(stderr, ".\n");
+    return warno;
 }

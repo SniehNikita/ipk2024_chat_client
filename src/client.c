@@ -2,14 +2,14 @@
  * @file client.c
  * @author Sniehovskyi Nikita (xsnieh00)
  * @date 16.03.2024
- * @brief Implementation of client UDP part
+ * @brief Implementation of client
  */
 
 #include "client.h"
 
+int protocol;
 int socket_fd;
 struct sockaddr_in addr;
-int protocol;
 
 int client(t_argv argv, int * fd) {
     struct hostent * server_ip;
@@ -45,7 +45,7 @@ int client_send(t_string buf, int buf_size) {
     return 0;
 }
 
-int cliend_read(t_string * buf, int * buf_size) {
+int client_read(t_string * buf, int * buf_size) {
     if (protocol == e_udp) {
         if (udp_read(buf, buf_size)) { return errno; }
     } else {

@@ -37,6 +37,7 @@ typedef enum {
     // Command
     warn_too_many_argv = 501,
     warn_command_not_found = 502,
+    warn_not_enough_argv = 503,
     // State
     warn_invalid_state_transition = 601
 } warning_code;
@@ -59,7 +60,8 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg);
  * @param lineno Number of line where warning occured
  * @param file_name Name of file where warning occured
  * @param msg Optional message to be printed
+ * @return Received warno parameter
  */
-void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg);
+int printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg);
 
 #endif

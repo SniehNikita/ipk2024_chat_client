@@ -55,7 +55,7 @@ int next_state_open(int msg_type);
  * @param msg_type Type of received/pending message
  * @return int New state
  */
-int next_state_err(int msg_type);
+int next_state_err();
 
 /**
  * @brief Gets next state after end
@@ -63,6 +63,6 @@ int next_state_err(int msg_type);
  * @param msg_type Type of received/pending message
  * @return int New state
  */
-int next_state_end(int msg_type);
+int next_state_end();
 
 #endif

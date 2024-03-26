@@ -9,11 +9,11 @@ SRCDIR = src/
 OBJDIR = objs/
 
 # HEADS = $(wildcard $(SRCDIR)*.h)
-HEADS = src/err_out.h src/main.h src/argv_parser.h src/client.h src/msg_parse.h src/msg_compose.h src/command.h
+HEADS = src/err_out.h src/main.h src/argv_parser.h src/client.h src/msg_parse.h src/msg_compose.h src/command.h src/queue.h src/state.h
 # SRCS = $(wildcard $(SRCDIR)*.c)
-SRCS = src/err_out.c src/main.c src/argv_parser.c src/client.c src/msg_parse.c src/msg_compose.c src/command.c
+SRCS = src/err_out.c src/main.c src/argv_parser.c src/client.c src/msg_parse.c src/msg_compose.c src/command.c src/queue.c src/state.c
 # OBJS = $(patsubst $(SRCDIR)%.c,$(OBJDIR)%.o,$(SRCS))
-OBJS = objs/err_out.o objs/main.o objs/argv_parser.o objs/client.o objs/msg_parse.o objs/msg_compose.o objs/command.o
+OBJS = objs/err_out.o objs/main.o objs/argv_parser.o objs/client.o objs/msg_parse.o objs/msg_compose.o objs/command.o objs/queue.o objs/state.o
 
 all: clear build
 

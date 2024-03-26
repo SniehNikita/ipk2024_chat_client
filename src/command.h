@@ -18,7 +18,7 @@
 #include "types.h"
 
 extern int errno;
-extern int lcl_msg_count;
+extern int client_msg_count;
 extern t_user user;
 
 /**
@@ -73,6 +73,15 @@ int cmd_parse_rename(t_command * command, t_command_argv cmd_argv);
  * @return int Result code
  */
 int split_argv(t_command_argv * cmd_argv, t_string cmd);
+
+/**
+ * @brief Executes msg command
+ * 
+ * @param cmd Auth command
+ * @param msg Result message
+ * @return int Result code
+ */
+int exec_msg(t_command cmd, t_msg * msg);
 
 /**
  * @brief Executes help command

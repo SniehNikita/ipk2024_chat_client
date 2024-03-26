@@ -61,7 +61,7 @@ int client_send(t_string buf, int buf_size);
  * @param buf_size Result message length
  * @return int Result code
  */
-int cliend_read(t_string * buf, int * buf_size);
+int client_read(t_string * buf, int * buf_size);
 
 /**
  * @brief Creates UDP fd
