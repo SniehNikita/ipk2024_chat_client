@@ -14,7 +14,7 @@
 /**
  * @brief Maximum string length for message content
  */
-#define STR_MAX_LEN 65536
+#define STR_MAX_LEN 256
 
 /**
  * @brief Maximum number of parameters in command 
@@ -30,11 +30,16 @@ typedef enum {
 } transport_protocol;
 
 /**
+ * @brief Common string (for message content etc.) 
+ */
+typedef char t_string[STR_MAX_LEN];
+
+/**
  * @brief Command line arguments type 
  */
 typedef struct t_argv {
     transport_protocol protocol;
-    char host[256];
+    t_string host;
     uint16_t port;
     uint16_t udp_timeout;
     uint8_t udp_retransmission;
@@ -58,11 +63,6 @@ typedef enum {
  * @brief MessageID predefined type 
  */
 typedef uint8_t t_msg_id;
-
-/**
- * @brief Common string (for message content etc.) 
- */
-typedef char t_string[STR_MAX_LEN];
 
 /**
  * @brief Content of confirm message 
@@ -212,7 +212,7 @@ typedef enum {
     e_state_start = 1,
     e_state_auth = 2,
     e_state_open = 3,
-    e_state_error = 4,
+    e_state_err = 4,
     e_state_end = 5
 } t_state;
 

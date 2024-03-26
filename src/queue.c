@@ -9,18 +9,28 @@
 
 t_queue * queue_create() {
     t_queue * queue = malloc(sizeof(t_queue));
+    if (queue == NULL) {
+        errno = printErrMsg(err_command_not_found, __LINE__, __FILE__, NULL);
+    }
     queue->first = NULL;
     return queue;
 }
 
-t_queue_item * queue_item_create() {
+t_queue_item * queue_create_item() {
     t_queue_item * item = malloc(sizeof(t_queue_item));
+    if (item == NULL) {
+        errno = printErrMsg(err_command_not_found, __LINE__, __FILE__, NULL);
+    }
     item->next = NULL;
     return item;
 }
 
 void queue_add(t_queue * queue, t_queue_item * item) {
-    queue_last(queue)->next = item;
+    if (queue_last(queue) == NULL) {
+        queue->first = item;
+    } else {
+        queue_last(queue)->next = item;
+    }    
 }
 
 t_queue_item * queue_first(t_queue * queue) {
@@ -60,19 +70,29 @@ t_queue_item * queue_remove(t_queue * queue, t_msg_id id) {
 
 t_queue_item * queue_last(t_queue * queue) {
     t_queue_item * item = queue->first;
-    while (item != NULL) {
+    
+    if (item == NULL) {
+        return item;
+    }
+    while (item->next != NULL) {
         item = item->next;
     }
     return item;
 }
 
 void queue_destroy(t_queue * queue) {
-    while (queue->first != NULL) {
-        queue_destroy_item(queue_remove(queue, 0));
+    if (queue != NULL) { 
+        while (queue->first != NULL) {
+            queue_destroy_item(queue_remove(queue, queue->first->msg.id));
+        }
+        free(queue);
+        queue = NULL;
     }
-    free(queue);
 }
 
 void queue_destroy_item(t_queue_item * item) {
-    free(item);
+    if (item != NULL) {
+        free(item);
+        item = NULL;
+    }
 }

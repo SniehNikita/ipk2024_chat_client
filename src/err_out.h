@@ -16,22 +16,29 @@
 typedef enum {
     // Common
     err_string_overflow = 1,
+    err_memory_alloc = 2,
     // Arguments
-    err_malformed_arguments = 100,
+    err_malformed_arguments = 101,
     // UDP client
-    err_socket_creation_failed = 200,
-    err_host_not_found = 201,
+    err_socket_creation_failed = 201,
+    err_host_not_found = 202,
     // Parser
-    err_msg_null = 400,
-    err_msg_type_unknown = 401,
-    // Command
-    err_cmd_corrupted = 500,
-    err_command_not_found = 501
+    err_msg_null = 401,
+    err_msg_type_unknown = 402,
+    err_cmd_corrupted = 501,
+    err_command_not_found = 502
+    // State
 } error_code;
+
 typedef enum {
-    warn_net_receive_failed = 200,
-    warn_net_send_failed = 201,
-    warn_too_many_argv = 500
+    // UDP client
+    warn_net_receive_failed = 201,
+    warn_net_send_failed = 202,
+    // Command
+    warn_too_many_argv = 501,
+    warn_command_not_found = 502,
+    // State
+    warn_invalid_state_transition = 601
 } warning_code;
 
 /**

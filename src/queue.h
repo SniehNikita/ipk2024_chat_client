@@ -16,6 +16,8 @@
 #include "err_out.h"
 #include "types.h"
 
+extern int errno;
+
 typedef struct t_queue_item {
     t_msg msg;
     struct t_queue_item * next;
@@ -27,7 +29,7 @@ typedef struct t_queue {
 
 t_queue * queue_create();
 
-t_queue_item * queue_item_create();
+t_queue_item * queue_create_item();
 
 void queue_add(t_queue * queue, t_queue_item * item);
 

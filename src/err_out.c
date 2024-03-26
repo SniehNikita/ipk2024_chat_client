@@ -17,12 +17,12 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
     }
     switch (errno) {
         case err_string_overflow: fprintf(stderr, "Max string length overflowed");break;
+        case err_memory_alloc: fprintf(stderr, "Memory allocation error");break;
         case err_malformed_arguments: fprintf(stderr, "Malformed arguments");break;
         case err_socket_creation_failed: fprintf(stderr, "Socket creation failed");break;
         case err_msg_null: fprintf(stderr, "Message is null");break;
         case err_msg_type_unknown: fprintf(stderr, "Message type is unknown");break;
         case err_cmd_corrupted: fprintf(stderr, "Command is corrupted. Use /help");break;
-        case err_command_not_found: fprintf(stderr, "Command not found. Use /help");break;
         default: fprintf(stderr, "Unknown error");break;
     }
     if (msg != NULL) {
@@ -33,6 +33,7 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
 }
 
 void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
+    fprintf(stderr, "ERR: ");
     fprintf(stderr, "Warning [%d] on line [%d]", warno, lineno);    
     if (file_name != NULL) {
         fprintf(stderr, " in file [%s]: ", file_name);
@@ -43,6 +44,8 @@ void printWarnMsg(warning_code warno, int lineno, char *file_name, char *msg) {
         case warn_net_receive_failed: fprintf(stderr, "recvfrom funtion failed");break;
         case warn_net_send_failed: fprintf(stderr, "sendto function failed");break;
         case warn_too_many_argv: fprintf(stderr, "Too many arguments");break;
+        case warn_command_not_found: fprintf(stderr, "Command not found. Use /help");break;
+        case warn_invalid_state_transition: fprintf(stderr, "Invalid state transition was ignored");break;
         default: fprintf(stderr, "Unknown warning");break;
     }
     if (msg != NULL) {
