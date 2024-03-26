@@ -7,19 +7,20 @@
 
 #include "queue.h"
 
-t_queue * queue_init(t_queue * queue) {
+t_queue * queue_create() {
+    t_queue * queue = malloc(sizeof(t_queue));
     queue->first = NULL;
     return queue;
 }
 
-t_queue_item * queue_item_init(t_queue_item * item) {
+t_queue_item * queue_item_create() {
+    t_queue_item * item = malloc(sizeof(t_queue_item));
     item->next = NULL;
     return item;
 }
 
-t_queue * queue_add(t_queue * queue, t_queue_item * item) {
+void queue_add(t_queue * queue, t_queue_item * item) {
     queue_last(queue)->next = item;
-    return queue;
 }
 
 t_queue_item * queue_first(t_queue * queue) {
@@ -65,3 +66,13 @@ t_queue_item * queue_last(t_queue * queue) {
     return item;
 }
 
+void queue_destroy(t_queue * queue) {
+    while (queue->first != NULL) {
+        queue_destroy_item(queue_remove(queue, 0));
+    }
+    free(queue);
+}
+
+void queue_destroy_item(t_queue_item * item) {
+    free(item);
+}
