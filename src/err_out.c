@@ -8,6 +8,7 @@
 #include "err_out.h"
 
 int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
+    fprintf(stderr, "ERR: ");
     fprintf(stderr, "Error [%d] on line [%d]", errno, lineno);
     if (file_name != NULL) {
         fprintf(stderr, " in file [%s]: ", file_name);
