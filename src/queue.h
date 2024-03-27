@@ -13,6 +13,8 @@
 #define __QUEUE_H__
 
 #include <stdlib.h>
+#include <stdbool.h>
+
 #include "err_out.h"
 #include "types.h"
 
@@ -20,6 +22,7 @@ extern int errno;
 
 typedef struct t_queue_item {
     t_msg msg;
+    t_udp_data udp; // Not relevant for TCP
     struct t_queue_item * next;
 } t_queue_item;
 
@@ -34,6 +37,8 @@ t_queue_item * queue_create_item();
 void queue_add(t_queue * queue, t_queue_item * item);
 
 t_queue_item * queue_first(t_queue * queue);
+
+t_queue_item * queue_next(t_queue_item * item);
 
 t_queue_item * queue_get(t_queue * queue, t_msg_id id);
 

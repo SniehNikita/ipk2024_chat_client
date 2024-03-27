@@ -37,6 +37,10 @@ t_queue_item * queue_first(t_queue * queue) {
     return queue->first;
 }
 
+t_queue_item * queue_next(t_queue_item * item) {
+    return item->next;
+}
+
 t_queue_item * queue_get(t_queue * queue, t_msg_id id) {
     t_queue_item * item = queue->first;
     while (item != NULL && item->msg.id != id) {

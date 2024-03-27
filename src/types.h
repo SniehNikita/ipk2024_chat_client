@@ -10,6 +10,7 @@
 #define __TYPES_H__
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /**
  * @brief Maximum string length for message content
@@ -225,5 +226,14 @@ typedef struct t_user {
     t_string channel_id;
     t_state state;
 } t_user;
+
+/**
+ * @brief Data about state of sent udp message 
+ */
+typedef struct t_udp_data {
+    bool is_confirmed; // Is message confirmed by server
+    int8_t retry_after; // Send msg again after [ms]
+    uint8_t retry_count; // Count of total processed retries
+} t_udp_data;
 
 #endif
