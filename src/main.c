@@ -7,9 +7,10 @@
 
 #include "main.h"
 
+t_argv argv_parsed;
+
 int main(int argc, char **argv) {
     struct pollfd poll_fds[2];
-    t_argv argv_parsed;
 
     client_msg_queue = queue_create();
     if (errno != 0) { stop(errno); }
@@ -24,13 +25,17 @@ int main(int argc, char **argv) {
     poll_fds[1].events = POLLIN;
 
     while (true) {
-        int ret = poll(poll_fds, 2, 250); 
+        int ret = poll(poll_fds, 2, POLL_INTERVAL); 
         if (ret > 0) {
             if (poll_fds[0].revents & POLLIN) {
-                printf("Got smth from socket!\n");
+                process_packet();
             }
             if (poll_fds[1].revents & POLLIN) {
                 process_command();
+            }
+            // Check for confirm messages timeouts
+            if (argv_parsed.protocol == e_udp) {
+                if (process_timeouts(POLL_INTERVAL)) { stop(errno); }
             }
         }
     }
@@ -41,15 +46,13 @@ int main(int argc, char **argv) {
 int process_command() {
     t_queue_item * new_item;
     t_command cmd;
-    t_string buf;
-    int buf_size;
     int new_state;
     
     if (get_command(&cmd)) { return errno; }
     new_item = queue_create_item();
     if (errno != 0) { stop(errno); }
     if (exec(cmd, &(new_item->msg))) { stop(errno); }
-    if (cmd.type == e_cmd_help || cmd.type == e_cmd_rename) {
+    if (is_command_local(cmd)) {
         queue_destroy_item(new_item);
         return 0;
     }
@@ -61,13 +64,47 @@ int process_command() {
     }
     if (new_item->msg.type != e_null) {
         queue_add(client_msg_queue, new_item);
-        compose(new_item->msg, &buf, &buf_size);
-        // client_send(buf, buf_size);
+        client_send(new_item->msg);
+        new_item->udp.is_confirmed = false;
+        new_item->udp.retry_after = argv_parsed.udp_timeout;
     } else {
         queue_destroy_item(new_item);
     }
     user.state = new_state;
 
+    return 0;
+}
+
+int process_packet() {
+    t_string buf;
+    t_msg msg;
+    int buf_size;
+
+    if (client_read(&buf, &buf_size)) { return errno; }
+    parse(&buf, buf_size, &msg);
+
+    return 0;
+}
+
+int process_timeouts(int time_delta) {
+    t_queue_item * item;
+    item = queue_first(client_msg_queue);
+    while (item != NULL) {
+        if (item->udp.is_confirmed) { // TODO move to process_packet()
+            item = queue_next(item);
+            queue_destroy_item(queue_remove(client_msg_queue, item->msg.id));
+            continue;
+        } 
+        item->udp.retry_after -= time_delta;
+        if (item->udp.retry_after <= 0) {
+            if (item->udp.retry_count >= argv_parsed.udp_retransmission) {
+                return errno = printErrMsg(err_retransmission_number_exceeded, __LINE__, __FILE__, NULL);
+            }
+            client_send(item->msg);
+            item->udp.retry_count++;
+        }
+        item = queue_next(item);
+    }
     return 0;
 }
 
@@ -86,12 +123,12 @@ int exec(t_command cmd, t_msg * msg) {
 }
 
 void sigintHandler(int signal) {
-    // printf("\nProgram ended with %d signal\n", signal);
     stop(0);
 }
 
 void stop(int exit_code) {
     queue_destroy(client_msg_queue);
     queue_destroy(server_msg_queue);
+    client_close();
     exit(exit_code);
 }

@@ -135,3 +135,11 @@ int exec_rename(t_command cmd) {
 
     return 0;
 }
+
+bool is_command_local(t_command cmd) {
+    switch(cmd.type) {
+        case e_cmd_help: return true;
+        case e_cmd_rename: return true;
+        default: return false;
+    }
+}

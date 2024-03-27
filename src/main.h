@@ -24,7 +24,11 @@
 #include "queue.h"
 #include "state.h"
 
+// Poll interval in miliseconds
+#define POLL_INTERVAL 125
+
 int errno = 0;
+
 /**
  * @brief SIGPIPE signal (might be set directly in the program). If appeared - program is stopped
  */
@@ -58,11 +62,26 @@ t_queue * server_msg_queue;
 void  sigintHandler(int signal);
 
 /**
- * @brief Processes command event
+ * @brief Processes received packet
  * 
  * @return int Result code
  */
 int process_command();
+
+/**
+ * @brief Processes received packet
+ * 
+ * @return int Result code
+ */
+int process_packet();
+
+/**
+ * @brief Checks if any message confirm timeout exceeded and resends them if needed
+ * 
+ * @param time_delta Time delta since last call
+ * @return int Result code
+ */
+int process_timeouts(int time_delta);
 
 /**
  * @brief Routes command execution

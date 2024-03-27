@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "err_out.h"
 #include "types.h"
@@ -115,5 +116,14 @@ int exec_join(t_command cmd, t_msg * msg);
  * @return int Result code
  */
 int exec_rename(t_command cmd);
+
+/**
+ * @brief Checks if command is processed locally and response should not be sent to server
+ * 
+ * @param cmd Command
+ * @return true Result of command execution should be sent to server
+ * @return false Result of command execution must not be sent to server
+ */
+bool is_command_local(t_command cmd);
 
 #endif

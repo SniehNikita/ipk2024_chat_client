@@ -52,7 +52,7 @@ int client(t_argv argv, int * fd);
  * @param buf_size Result message length
  * @return int Result code
  */
-int client_send(t_string buf, int buf_size);
+int client_send(t_msg msg);
 
 /**
  * @brief Routes message read
@@ -62,6 +62,13 @@ int client_send(t_string buf, int buf_size);
  * @return int Result code
  */
 int client_read(t_string * buf, int * buf_size);
+
+/**
+ * @brief Closes client. Clears all client-allocated resources
+ * 
+ * @return int Result code
+ */
+int client_close();
 
 /**
  * @brief Creates UDP fd

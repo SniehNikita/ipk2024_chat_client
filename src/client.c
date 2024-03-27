@@ -36,7 +36,11 @@ int client(t_argv argv, int * fd) {
     return 0;
 }
 
-int client_send(t_string buf, int buf_size) {
+int client_send(t_msg msg) {
+    t_string buf;
+    int buf_size;
+
+    compose(msg, &buf, &buf_size);    
     if (protocol == e_udp) {
         if (udp_send(buf, buf_size)) { return errno; }
     } else {
@@ -51,6 +55,11 @@ int client_read(t_string * buf, int * buf_size) {
     } else {
         if (tcp_read(buf, buf_size)) { return errno; }
     }
+    return 0;
+}
+
+int client_close() {
+    close(socket_fd);
     return 0;
 }
 
@@ -87,4 +96,16 @@ int tcp_client(t_argv argv) {
 int tcp_read(t_string * buf, int * buf_size) {
 
     return 0;
+}
+
+void lprintf(t_string str, int len) {
+    printf("lprintf>%d:", len);
+    for (int i=0;i<len;i++) {
+        if (str[i] == 0x00) {
+            printf(".");
+        } else {
+            printf("%c", str[i]);                
+        }
+    }
+    printf("\n");
 }
