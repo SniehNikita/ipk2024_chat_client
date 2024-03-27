@@ -22,6 +22,7 @@ typedef enum {
     // UDP client
     err_socket_creation_failed = 201,
     err_host_not_found = 202,
+    err_retransmission_number_exceeded = 203,
     // Parser
     err_msg_null = 401,
     err_msg_type_unknown = 402,
