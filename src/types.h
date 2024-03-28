@@ -15,7 +15,7 @@
 /**
  * @brief Maximum string length for message content
  */
-#define STR_MAX_LEN 256
+#define STR_MAX_LEN 512
 
 /**
  * @brief Maximum number of parameters in command 

@@ -7,6 +7,8 @@
 
 #include "client.h"
 
+int cnt = 0;
+
 int protocol;
 int socket_fd;
 struct sockaddr_in addr;
@@ -36,11 +38,52 @@ int client(t_argv argv, int * fd) {
     return 0;
 }
 
+void lprintf(t_string str, int len) {
+    for (int i = 0;i < (len / 8)+1-(len%8 == 0); i++) {
+        for (int j = 0; j < 8; j++) {
+            if (j == 4) {
+                printf(" ");
+            }
+            if (i*8+j >= len) {
+                printf("   ");
+            } else {
+                printf("%02x ", (unsigned int) str[i*8+j]);
+            }
+        }
+        printf("| ");
+        for (int j = 0; j < 8; j++) {
+            if (j == 4) {
+                printf(" ");
+            }
+            if (i*8+j >= len) {
+                printf("   ");
+            } else {
+                if (str[i*8+j] < '!') {
+                    printf(".");
+                } else {
+                    printf("%c", str[i*8+j]);
+                }
+            }
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
 int client_send(t_msg msg) {
     t_string buf;
     int buf_size;
 
-    compose(msg, &buf, &buf_size);    
+    cnt++;
+    if (cnt >= 15) {
+        printf(">> Limit exceeded\n");
+        return 0;
+    }
+
+    memset(&buf, 0x00, STR_MAX_LEN);
+    compose(msg, &buf, &buf_size);  
+    printf("SENDING >>> \n");
+    lprintf(buf, buf_size);  
     if (protocol == e_udp) {
         if (udp_send(buf, buf_size)) { return errno; }
     } else {
@@ -55,6 +98,8 @@ int client_read(t_string * buf, int * buf_size) {
     } else {
         if (tcp_read(buf, buf_size)) { return errno; }
     }
+    printf("RECEIVING >>> \n");
+    lprintf(*buf, *buf_size);
     return 0;
 }
 
@@ -96,16 +141,4 @@ int tcp_client(t_argv argv) {
 int tcp_read(t_string * buf, int * buf_size) {
 
     return 0;
-}
-
-void lprintf(t_string str, int len) {
-    printf("lprintf>%d:", len);
-    for (int i=0;i<len;i++) {
-        if (str[i] == 0x00) {
-            printf(".");
-        } else {
-            printf("%c", str[i]);                
-        }
-    }
-    printf("\n");
 }

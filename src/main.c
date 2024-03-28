@@ -33,10 +33,10 @@ int main(int argc, char **argv) {
             if (poll_fds[1].revents & POLLIN) {
                 process_command();
             }
-            // Check for confirm messages timeouts
-            if (argv_parsed.protocol == e_udp) {
-                if (process_timeouts(POLL_INTERVAL)) { stop(errno); }
-            }
+        }
+        // Check for confirm messages timeouts
+        if (argv_parsed.protocol == e_udp) {
+            if (process_timeouts(POLL_INTERVAL)) { }//stop(errno); }
         }
     }
 
@@ -81,8 +81,20 @@ int process_packet() {
     int buf_size;
 
     if (client_read(&buf, &buf_size)) { return errno; }
-    parse(&buf, buf_size, &msg);
+    parse(buf, buf_size, &msg);
 
+    if (msg.type != e_confirm) {
+        confirm_msg(msg);
+    }
+
+    switch(msg.type) {
+        case e_confirm: received_confirm(msg);
+        case e_reply: break;
+        case e_msg: break;
+        case e_err: break;
+        case e_bye: break;
+        default: break;
+    }
     return 0;
 }
 
@@ -90,11 +102,6 @@ int process_timeouts(int time_delta) {
     t_queue_item * item;
     item = queue_first(client_msg_queue);
     while (item != NULL) {
-        if (item->udp.is_confirmed) { // TODO move to process_packet()
-            item = queue_next(item);
-            queue_destroy_item(queue_remove(client_msg_queue, item->msg.id));
-            continue;
-        } 
         item->udp.retry_after -= time_delta;
         if (item->udp.retry_after <= 0) {
             if (item->udp.retry_count >= argv_parsed.udp_retransmission) {
@@ -120,6 +127,18 @@ int exec(t_command cmd, t_msg * msg) {
     }
 
     return 0;
+}
+
+int confirm_msg(t_msg msg) {
+    t_msg confirm;
+    confirm.type = e_confirm;
+    confirm.content.confirm.ref_id = msg.id;
+    client_send(confirm);
+    return 0;
+}
+
+int received_confirm(t_msg msg) {
+    queue_destroy_item(queue_remove(client_msg_queue, msg.content.confirm.ref_id));
 }
 
 void sigintHandler(int signal) {

@@ -23,7 +23,7 @@ int printErrMsg(error_code errno, int lineno, char *file_name, char *msg) {
         case err_msg_null: fprintf(stderr, "Message is null");break;
         case err_msg_type_unknown: fprintf(stderr, "Message type is unknown");break;
         case err_cmd_corrupted: fprintf(stderr, "Command is corrupted. Use /help");break;
-        case err_retransmission_number_exceeded: fprintf(stderr, "Server did not confirm message receive repeatedly");break;
+        case err_retransmission_number_exceeded: fprintf(stderr, "Server did not confirm receipt of the message repeatedly");break;
         default: fprintf(stderr, "Unknown error");break;
     }
     if (msg != NULL) {

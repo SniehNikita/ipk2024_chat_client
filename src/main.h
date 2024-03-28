@@ -55,13 +55,6 @@ t_queue * client_msg_queue;
 t_queue * server_msg_queue;
 
 /**
- * @brief Hadler for sigint signal
- * 
- * @param signal Signal received from the system
- */
-void  sigintHandler(int signal);
-
-/**
  * @brief Processes received packet
  * 
  * @return int Result code
@@ -91,6 +84,21 @@ int process_timeouts(int time_delta);
  * @return int Result code
  */
 int exec(t_command cmd, t_msg * msg);
+
+/**
+ * @brief Confirms recieved message
+ * 
+ * @param msg Recieved message
+ * @return int 
+ */
+int confirm_msg(t_msg msg);
+
+/**
+ * @brief Hadler for sigint signal
+ * 
+ * @param signal Signal received from the system
+ */
+void  sigintHandler(int signal);
 
 /**
  * @brief Exits as standard exit() function but with freeing of memory
