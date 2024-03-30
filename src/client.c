@@ -47,7 +47,7 @@ void lprintf(t_string str, int len) {
             if (i*8+j >= len) {
                 printf("   ");
             } else {
-                printf("%02x ", (unsigned int) str[i*8+j]);
+                printf("%02x ", (uint8_t) str[i*8+j]);
             }
         }
         printf("| ");
@@ -75,7 +75,7 @@ int client_send(t_msg msg) {
     int buf_size;
 
     cnt++;
-    if (cnt >= 15) {
+    if (cnt >= 25) {
         printf(">> Limit exceeded\n");
         return 0;
     }

@@ -12,6 +12,7 @@ t_queue * queue_create() {
     if (queue == NULL) {
         errno = printErrMsg(err_command_not_found, __LINE__, __FILE__, NULL);
     }
+    memset(&(*queue), '\0', sizeof(t_queue));
     queue->first = NULL;
     return queue;
 }
@@ -21,8 +22,19 @@ t_queue_item * queue_create_item() {
     if (item == NULL) {
         errno = printErrMsg(err_command_not_found, __LINE__, __FILE__, NULL);
     }
+    memset(&(*item), '\0', sizeof(t_queue_item));
     item->next = NULL;
     return item;
+}
+
+int queue_length(t_queue * queue) {
+    int cnt = 0;
+    t_queue_item * item = queue_first(queue);
+    while (item != NULL) {
+        cnt++;
+        item = item->next;
+    }
+    return cnt;
 }
 
 void queue_add(t_queue * queue, t_queue_item * item) {

@@ -26,6 +26,7 @@ typedef enum {
     // Parser
     err_msg_null = 401,
     err_msg_type_unknown = 402,
+    // Command
     err_cmd_corrupted = 501,
     err_command_not_found = 502
     // State
@@ -39,6 +40,17 @@ typedef enum {
     warn_too_many_argv = 501,
     warn_command_not_found = 502,
     warn_not_enough_argv = 503,
+    warn_msg_still_pending = 504,
+    warn_username_len_exceeded = 505,
+    warn_channelid_len_exceeded = 506,
+    warn_secret_len_exceeded = 507,
+    warn_displayname_len_exceeded = 508,
+    warn_message_len_exceeded = 509,
+    warn_username_char_forbidden = 510,
+    warn_channelid_char_forbidden = 511,
+    warn_secret_char_forbidden = 512,
+    warn_displayname_char_forbidden = 513,
+    warn_message_char_forbidden = 514,
     // State
     warn_invalid_state_transition = 601
 } warning_code;

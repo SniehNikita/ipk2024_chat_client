@@ -32,7 +32,7 @@ mkobjdir:
 	mkdir -p $(OBJDIR)
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all ./ipk24chat-client -t udp -s 114.101.0.1 -p 12345 -d 250 -r 3
+	valgrind --leak-check=full --show-leak-kinds=all ./ipk24chat-client -t udp -s anton5.fit.vutbr.cz -p 4567 -d 250 -r 3
 
 udp: clear build
 	./ipk24chat-client -t udp -s 114.101.0.1 -p 12345 -d 250 -r 3

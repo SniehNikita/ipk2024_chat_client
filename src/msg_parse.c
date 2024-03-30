@@ -27,7 +27,7 @@ int parse(t_string recv, int len, t_msg * msg) {
 
 int parse_confirm(t_string recv, t_msg * msg) {
     msg->type = e_confirm;
-    msg->content.reply.ref_id = recv[1] * 0xFF + recv[2];
+    msg->content.confirm.ref_id = recv[1] * 0xFF + recv[2];
     return 0;
 }
 

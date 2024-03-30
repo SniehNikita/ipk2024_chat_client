@@ -50,9 +50,9 @@ t_user user;
 t_queue * client_msg_queue;
 
 /**
- * @brief Server messages records 
+ * @brief List of messages from server that were already confirmed 
  */
-t_queue * server_msg_queue;
+t_confirmed_list confirmed_msg;
 
 /**
  * @brief Processes received packet
@@ -60,21 +60,6 @@ t_queue * server_msg_queue;
  * @return int Result code
  */
 int process_command();
-
-/**
- * @brief Processes received packet
- * 
- * @return int Result code
- */
-int process_packet();
-
-/**
- * @brief Checks if any message confirm timeout exceeded and resends them if needed
- * 
- * @param time_delta Time delta since last call
- * @return int Result code
- */
-int process_timeouts(int time_delta);
 
 /**
  * @brief Routes command execution
@@ -86,12 +71,76 @@ int process_timeouts(int time_delta);
 int exec(t_command cmd, t_msg * msg);
 
 /**
+ * @brief Processes received packet
+ * 
+ * @return int Result code
+ */
+int process_packet();
+
+/**
  * @brief Confirms recieved message
  * 
  * @param msg Recieved message
  * @return int 
  */
 int confirm_msg(t_msg msg);
+
+/**
+ * @brief Checks if this message id was already confirmed (thus processed)
+ * 
+ * @param msg Message
+ * @return true Was confirmed
+ * @return false Was not confirmed yet
+ */
+bool is_msg_confirmed(t_msg msg);
+
+/**
+ * @brief Adds message id to confirmed ids list
+ * 
+ * @param msg Message
+ * @return int Result code
+ */
+int add_msg_confirmed(t_msg msg);
+
+/**
+ * @brief Incoming confirm handler
+ * 
+ * @param msg Confirm message
+ * @return int Result code
+ */
+int received_confirm(t_msg msg);
+
+/**
+ * @brief Incoming reply handler
+ * 
+ * @param msg Reply message
+ * @return int Result code
+ */
+int received_reply(t_msg msg);
+
+/**
+ * @brief Incoming msg handler
+ * 
+ * @param msg Msg message
+ * @return int Result code
+ */
+int received_msg(t_msg msg);
+
+/**
+ * @brief Incoming err handler
+ * 
+ * @param msg Err message
+ * @return int Result code
+ */
+int received_err(t_msg msg);
+
+/**
+ * @brief Checks if any message confirm timeout exceeded and resends them if needed
+ * 
+ * @param time_delta Time delta since last call
+ * @return int Result code
+ */
+int process_timeouts(int time_delta);
 
 /**
  * @brief Hadler for sigint signal

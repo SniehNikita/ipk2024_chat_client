@@ -76,6 +76,46 @@ int cmd_parse_rename(t_command * command, t_command_argv cmd_argv);
 int split_argv(t_command_argv * cmd_argv, t_string cmd);
 
 /**
+ * @brief Validates user name
+ * 
+ * @param username User name
+ * @return int Result code
+ */
+int validate_username(t_string username);
+
+/**
+ * @brief Validates channel id
+ * 
+ * @param channelid Channel id
+ * @return int Result code
+ */
+int validate_channelid(t_string channelid);
+
+/**
+ * @brief Validates secret
+ * 
+ * @param secret Secret
+ * @return int Result code
+ */
+int validate_secret(t_string secret);
+
+/**
+ * @brief Validates display name
+ * 
+ * @param displayname Display name
+ * @return int Result code
+ */
+int validate_displayname(t_string displayname);
+
+/**
+ * @brief Validates message
+ * 
+ * @param message Message
+ * @return int Result code
+ */
+int validate_message(t_string message);
+
+/**
  * @brief Executes msg command
  * 
  * @param cmd Auth command
@@ -116,6 +156,14 @@ int exec_join(t_command cmd, t_msg * msg);
  * @return int Result code
  */
 int exec_rename(t_command cmd);
+
+/**
+ * @brief Executes close command (Custom: sends BYE message to server)
+ * 
+ * @param cmd Close command
+ * @return int Result code
+ */
+int exec_close(t_msg * msg);
 
 /**
  * @brief Checks if command is processed locally and response should not be sent to server

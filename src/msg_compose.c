@@ -102,7 +102,7 @@ int compose_msg(t_msg msg, t_string * send, int * len) {
     index += added_len;
     (*send)[index++] = 0x00;
     added_len = 0;
-    compose_string(&(*send),msg.content.msg.display_name, index, &added_len);
+    compose_string(&(*send),msg.content.msg.msg, index, &added_len);
     index += added_len;
     (*send)[index++] = 0x00;
     *len = index;

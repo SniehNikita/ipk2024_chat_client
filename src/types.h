@@ -12,6 +12,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define USERNAME_MAX_LEN 20
+#define CHANNELID_MAX_LEN 20
+#define SECRET_MAX_LEN 128
+#define DISPLAYNAME_MAX_LEN 20
+#define MESSAGE_MAX_LEN 1400
+
 /**
  * @brief Maximum string length for message content
  */
@@ -21,6 +27,11 @@
  * @brief Maximum number of parameters in command 
  */
 #define CMD_MAX_ARGV 4
+
+/**
+ * @brief Maximum number of confirmed messages ids in t_confirmed_list 
+ */
+#define CONFIRM_MAX_REC 256
 
 /**
  * @brief Protocol type 
@@ -152,7 +163,8 @@ typedef enum {
     e_cmd_auth = 2,
     e_cmd_join = 3,
     e_cmd_rename = 4,
-    e_cmd_help = 5
+    e_cmd_help = 5,
+    e_cmd_close = 0xFF // Custom: sends BYE message to server
 } t_command_type;
 
 /**
@@ -235,5 +247,10 @@ typedef struct t_udp_data {
     int8_t retry_after; // Send msg again after [ms]
     uint8_t retry_count; // Count of total processed retries
 } t_udp_data;
+
+typedef struct t_confirmed_list {
+    int length;
+    int confirmed[CONFIRM_MAX_REC];
+} t_confirmed_list;
 
 #endif

@@ -14,6 +14,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "err_out.h"
 #include "types.h"
@@ -33,6 +34,8 @@ typedef struct t_queue {
 t_queue * queue_create();
 
 t_queue_item * queue_create_item();
+
+int queue_length(t_queue * queue);
 
 void queue_add(t_queue * queue, t_queue_item * item);
 
