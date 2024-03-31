@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
         if (argv_parsed.protocol == e_tcp && (errno || user.state == e_state_end)) {
             send_bye();
             stop(0); // If tcp -> no need for confirmation
-        } else if (argv_parsed.protocol == e_udp && errno && user.state != e_state_end) { // UDP might be already waiting for confirm
+        } else if (argv_parsed.protocol == e_udp && (errno || user.state == e_state_end) && !queue_length(client_msg_queue)) { // UDP might be already waiting for confirm
             send_bye();
         }
     }

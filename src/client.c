@@ -78,6 +78,8 @@ int client_send(t_msg msg) {
     } else {
         compose_tcp(msg, &buf, &buf_size);  
     }
+    // printf("SENDING >>> \n");
+    // lprintf(buf, buf_size);  
     if (protocol == e_udp) {
         if (udp_send(buf, buf_size)) { return errno; }
     } else {
@@ -92,6 +94,8 @@ int client_read(t_string * buf, int * buf_size) {
     } else {
         if (tcp_read(buf, buf_size)) { return errno; }
     }
+    // printf("RECEIVING >>> \n");
+    // lprintf(*buf, *buf_size);
     return 0;
 }
 
