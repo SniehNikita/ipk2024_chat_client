@@ -11,90 +11,172 @@
 
 #define __MSG_COMPOSE_H__
 
+#include <string.h>
+
 #include "err_out.h"
 #include "types.h"
 
 extern int errno;
 
 /**
- * @brief Main composing function 
+ * @brief Main udp composing function 
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose(t_msg msg, t_string * send, int * len);
+int compose_udp(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose confirm message
+ * @brief Compose udp confirm message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_confirm(t_msg msg, t_string * send, int * len);
+int compose_udp_confirm(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose reply message
+ * @brief Compose udp reply message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_reply(t_msg msg, t_string * send, int * len);
+int compose_udp_reply(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose auth message
+ * @brief Compose udp auth message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_auth(t_msg msg, t_string * send, int * len);
+int compose_udp_auth(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose join message
+ * @brief Compose udp join message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_join(t_msg msg, t_string * send, int * len);
+int compose_udp_join(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose msg message
+ * @brief Compose udp msg message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_msg(t_msg msg, t_string * send, int * len);
+int compose_udp_msg(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose err message
+ * @brief Compose udp err message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_err(t_msg msg, t_string * send, int * len);
+int compose_udp_err(t_msg msg, t_string * send, int * len);
 
 /**
- * @brief Compose bye message
+ * @brief Compose udp bye message
  * 
  * @param msg Message to compose
  * @param send Byte array which will be sent back
  * @param len Length of byte array
  * @return int Result code
  */
-int compose_bye(t_msg msg, t_string * send, int * len);
+int compose_udp_bye(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Main tcp composing function 
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp confirm message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_confirm(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp reply message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_reply(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp auth message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_auth(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp join message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_join(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp msg message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_msg(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp err message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_err(t_msg msg, t_string * send, int * len);
+
+/**
+ * @brief Compose tcp bye message
+ * 
+ * @param msg Message to compose
+ * @param send Byte array which will be sent back
+ * @param len Length of byte array
+ * @return int Result code
+ */
+int compose_tcp_bye(t_msg msg, t_string * send, int * len);
 
 /**
  * @brief String copy

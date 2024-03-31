@@ -35,7 +35,13 @@ int main(int argc, char **argv) {
         }
         // Check for confirm messages timeouts
         if (argv_parsed.protocol == e_udp) {
-            if (process_timeouts(POLL_INTERVAL)) { stop(errno); }
+            process_timeouts(POLL_INTERVAL);
+        }
+        if (argv_parsed.protocol == e_tcp && (errno || user.state == e_state_end)) {
+            send_bye();
+            stop(0); // If tcp -> no need for confirmation
+        } else if (argv_parsed.protocol == e_udp && errno && user.state != e_state_end) { // UDP might be already waiting for confirm
+            send_bye();
         }
     }
 
@@ -55,30 +61,41 @@ int process_command() {
         return 0;
     }
     new_item = queue_create_item();
-    if (errno) { stop(errno); } // Mem alloc
+    if (errno) { return errno; } // Mem alloc
     if (exec(cmd, &(new_item->msg))) {  // Processing of command
         queue_destroy_item(new_item);
-        stop(errno);
+        new_item = NULL;
+        return errno;
     }
     if (is_command_local(cmd)) { // help/rename no need to send to server
         queue_destroy_item(new_item);
+        new_item = NULL;
         return 0;
     }
     new_state = get_next_state(user.state, new_item->msg); // Calculation of next state
     if (new_state == e_state_null) { // Forbidden command from current state
         printWarnMsg(warn_invalid_state_transition, __LINE__, __FILE__, NULL);
         queue_destroy_item(new_item);
+        new_item = NULL;
         return 0;
     }
-    if (new_item->msg.type != e_null) { // Sending message
-        queue_add(client_msg_queue, new_item);
+    if (new_item->msg.type != e_null && new_item->msg.type != e_bye) { // Sending message, BYE should be sent only by routine
         client_send(new_item->msg);
+        if (argv_parsed.protocol == e_udp) {
+            queue_add(client_msg_queue, new_item);
+        }
         new_item->udp.is_confirmed = false;
         new_item->udp.retry_after = argv_parsed.udp_timeout;
     } else {
         queue_destroy_item(new_item);
+        new_item = NULL;
     }
     user.state = new_state;
+
+    if (argv_parsed.protocol == e_tcp && new_item != NULL) {
+        queue_destroy_item(new_item);
+        new_item = NULL;
+    }
 
     return 0;
 }
@@ -108,18 +125,30 @@ int process_packet() {
     memset(&msg, '\0', sizeof(msg));
 
     if (client_read(&buf, &buf_size)) { return errno; }
-    parse(buf, buf_size, &msg);
-
-    if (msg.type != e_confirm) {
-        confirm_msg(msg);
-        if (is_msg_confirmed(msg)) { // If message is in confirmed array -> leave
-            return 0;
+    if (argv_parsed.protocol == e_tcp) {
+        if (parse_tcp(buf, buf_size, &msg)) {
+            send_error();
+            return errno;
         }
-        add_msg_confirmed(msg);
+    } else {
+        if (parse_udp(buf, buf_size, &msg)) {
+            send_error();
+            return errno;
+        }
+    }
+
+    if (msg.type != e_confirm || argv_parsed.protocol == e_tcp) { // Process all messages except confirm
+        if (argv_parsed.protocol == e_udp) { // Confirmation is only for udp
+            confirm_msg(msg);
+            if (is_msg_confirmed(msg)) { // If message is in confirmed array -> leave
+                return 0;
+            }
+            add_msg_confirmed(msg);
+        }
         new_state = get_next_state(user.state, msg); // Calculation of next state
-        if (new_state == e_state_null) { // Forbidden command from current state
-            printWarnMsg(warn_invalid_state_transition, __LINE__, __FILE__, NULL);
-            return 0;
+        if (new_state == e_state_null) { // Forbidden packet from current state
+            printWarnMsg(warn_invalid_state_transition_serv, __LINE__, __FILE__, NULL);
+            return warn_invalid_state_transition_serv;
         }
         user.state = new_state;
     }
@@ -129,13 +158,18 @@ int process_packet() {
             received_confirm(msg);
             // Close client if confirmation of BYE received
             if (user.state == e_state_end && queue_length(client_msg_queue) == 0) {
-                stop(0);
+                stop(0); // Program stopped by client
             }
             break;
         case e_reply: received_reply(msg); break;
         case e_msg: received_msg(msg); break;
         case e_err: received_err(msg); break;
-        case e_bye: stop(0); break;
+        case e_bye:
+            send_bye(); // Send bye before closing
+            if (argv_parsed.protocol == e_tcp) {
+                stop(0);
+            }
+            break;
         default: break;
     }
     return 0;
@@ -194,8 +228,8 @@ int process_timeouts(int time_delta) {
     while (item != NULL) {
         item->udp.retry_after -= time_delta;
         if (item->udp.retry_after <= 0) {
-            if (item->udp.retry_count >= argv_parsed.udp_retransmission) {
-                return errno = printErrMsg(err_retransmission_number_exceeded, __LINE__, __FILE__, NULL);
+            if (item->udp.retry_count >= argv_parsed.udp_retransmission) { // No reply -> close connection
+                stop(errno = printErrMsg(err_retransmission_number_exceeded, __LINE__, __FILE__, NULL));
             }
             client_send(item->msg);
             item->udp.retry_count++;
@@ -205,8 +239,61 @@ int process_timeouts(int time_delta) {
     return 0;
 }
 
+int send_error() {
+    t_queue_item * new_item;
+    new_item = queue_create_item();
+    new_item->msg.id = client_msg_count++;
+    new_item->msg.type = e_err;
+    memcpy(new_item->msg.content.err.display_name, user.display_name, sizeof(user.display_name));    
+    memcpy(new_item->msg.content.err.msg, "Message is corrupted", sizeof("Message is corrupted"));
+    new_item->udp.is_confirmed = false;
+    new_item->udp.retry_after = argv_parsed.udp_timeout;
+    user.state = get_next_state(user.state, new_item->msg); // Should always be e_state_end or e_state_err
+    if (user.state == e_state_null) { // No communication was started if bye leads to nowhere
+        queue_destroy_item(new_item);
+        new_item = NULL;
+        stop(errno);
+    }
+    client_send(new_item->msg);    
+    if (argv_parsed.protocol == e_udp) {
+        queue_add(client_msg_queue, new_item);
+    }
+    if (argv_parsed.protocol == e_tcp && new_item != NULL) {
+        queue_destroy_item(new_item);
+        new_item = NULL;
+    }
+    return 0;    
+}
+
+int send_bye() {
+    t_queue_item * new_item;
+    new_item = queue_create_item();
+    new_item->msg.id = client_msg_count++;
+    new_item->msg.type = e_bye;
+    new_item->udp.is_confirmed = false;
+    new_item->udp.retry_after = argv_parsed.udp_timeout;
+    user.state = get_next_state(user.state, new_item->msg); // Should always be e_state_end
+    if (user.state == e_state_null) { // No communication was started if bye leads to nowhere
+        queue_destroy_item(new_item);
+        new_item = NULL;
+        stop(errno);
+    }
+    client_send(new_item->msg);
+    if (argv_parsed.protocol == e_udp) {
+        queue_add(client_msg_queue, new_item);
+    }
+    if (argv_parsed.protocol == e_tcp && new_item != NULL) {
+        queue_destroy_item(new_item);
+        new_item = NULL;
+    } 
+    return 0;
+}
+
 void sigintHandler(int signal) {
-    stop(0);
+    send_bye(); // Will send bye or close program if no communication has been started yet
+    if (argv_parsed.protocol == e_tcp) {
+        stop(0); // If tcp -> no need to wait for confirmation
+    }
 }
 
 void stop(int exit_code) {

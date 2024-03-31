@@ -14,14 +14,14 @@
 
 #define USERNAME_MAX_LEN 20
 #define CHANNELID_MAX_LEN 20
-#define SECRET_MAX_LEN 128
 #define DISPLAYNAME_MAX_LEN 20
+#define SECRET_MAX_LEN 128
 #define MESSAGE_MAX_LEN 1400
 
 /**
  * @brief Maximum string length for message content
  */
-#define STR_MAX_LEN 512
+#define STR_MAX_LEN MESSAGE_MAX_LEN + USERNAME_MAX_LEN + DISPLAYNAME_MAX_LEN + SECRET_MAX_LEN
 
 /**
  * @brief Maximum number of parameters in command 
@@ -53,7 +53,7 @@ typedef struct t_argv {
     transport_protocol protocol;
     t_string host;
     uint16_t port;
-    uint16_t udp_timeout;
+    int64_t udp_timeout;
     uint8_t udp_retransmission;
 } t_argv;
 
@@ -244,7 +244,7 @@ typedef struct t_user {
  */
 typedef struct t_udp_data {
     bool is_confirmed; // Is message confirmed by server
-    int8_t retry_after; // Send msg again after [ms]
+    int64_t retry_after; // Send msg again after [ms]
     uint8_t retry_count; // Count of total processed retries
 } t_udp_data;
 

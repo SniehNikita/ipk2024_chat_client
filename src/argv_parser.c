@@ -36,7 +36,7 @@ int argvParse(int argc, char **argv, t_argv *argv_p) {
             argv_p->port = atoi(argv[curr_opt+1]);
             curr_opt++;
         } else if (!strcmp(argv[curr_opt], "-d")) {
-            argv_p->udp_timeout = atoi(argv[curr_opt+1]);
+            argv_p->udp_timeout = atoll(argv[curr_opt+1]);
             curr_opt++;
         } else if (!strcmp(argv[curr_opt], "-r")) {
             argv_p->udp_retransmission = atoi(argv[curr_opt+1]);

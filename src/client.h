@@ -101,7 +101,7 @@ int udp_read(t_string * buf, int * buf_size);
  * @param argv Parsed program arguments
  * @return Result code
  */
-int tcp_client(t_argv argv);
+int tcp_client();
 
 /**
  * @brief Sends TCP message

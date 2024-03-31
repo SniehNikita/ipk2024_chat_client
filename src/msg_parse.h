@@ -12,82 +12,164 @@
 #define __MSG_PARSE_H__
 
 #include <string.h>
+#include <ctype.h>
+
 #include "err_out.h"
 #include "types.h"
 
 extern int errno;
 
 /**
- * @brief Main parsing function 
+ * @brief Main udp parsing function 
  * 
  * @param recv Received byte array
  * @param len Length of byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse(t_string recv, int len, t_msg * msg);
+int parse_udp(t_string recv, int len, t_msg * msg);
 
 /**
- * @brief Parses confirm message
+ * @brief Parses udp confirm message
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_confirm(t_string recv, t_msg * msg);
+int parse_udp_confirm(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses reply message
+ * @brief Parses udp reply message
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_reply(t_string recv, t_msg * msg);
+int parse_udp_reply(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses auth message 
+ * @brief Parses udp auth message 
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_auth(t_string recv, t_msg * msg);
+int parse_udp_auth(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses join message 
+ * @brief Parses udp join message 
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_join(t_string recv, t_msg * msg);
+int parse_udp_join(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses msg message 
+ * @brief Parses udp msg message 
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_msg(t_string recv, t_msg * msg);
+int parse_udp_msg(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses err message 
+ * @brief Parses udp err message 
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_err(t_string recv, t_msg * msg);
+int parse_udp_err(t_string recv, t_msg * msg);
 
 /**
- * @brief Parses bye message 
+ * @brief Parses udp bye message 
  * 
  * @param recv Received byte array
  * @param msg Result message
  * @return int Result code
  */
-int parse_bye(t_string recv, t_msg * msg);
+int parse_udp_bye(t_string recv, t_msg * msg);
+
+/**
+ * @brief Main tcp parsing function 
+ * 
+ * @param recv Received byte array
+ * @param len Length of byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp(t_string recv, int len, t_msg * msg);
+
+/**
+ * @brief Parses tcp reply message
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_reply(t_string recv, t_msg * msg);
+
+/**
+ * @brief Parses tcp auth message 
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_auth(t_string recv, t_msg * msg);
+
+/**
+ * @brief Parses tcp join message 
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_join(t_string recv, t_msg * msg);
+
+/**
+ * @brief Parses tcp msg message 
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_msg(t_string recv, t_msg * msg);
+
+/**
+ * @brief Parses tcp err message 
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_err(t_string recv, t_msg * msg);
+
+/**
+ * @brief Parses tcp bye message 
+ * 
+ * @param recv Received byte array
+ * @param msg Result message
+ * @return int Result code
+ */
+int parse_tcp_bye(t_string recv, t_msg * msg);
+
+bool cmp_part(t_string str, char * ref, int start);
+
+void uppercase(t_string * str);
+
+void get_word(t_string * word, t_string str, int start);
+
+bool get_dname(t_string * dname, t_string str, int start);
+
+bool get_id(t_string * id, t_string str, int start);
+
+bool get_secret(t_string * secret, t_string str, int start);
+
+bool get_content(t_string * content, t_string str, int start);
+
+bool is_whitespace(char c);
 
 #endif

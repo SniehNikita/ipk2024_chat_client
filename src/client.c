@@ -7,8 +7,6 @@
 
 #include "client.h"
 
-int cnt = 0;
-
 int protocol;
 int socket_fd;
 struct sockaddr_in addr;
@@ -73,17 +71,13 @@ void lprintf(t_string str, int len) {
 int client_send(t_msg msg) {
     t_string buf;
     int buf_size;
-
-    cnt++;
-    if (cnt >= 25) {
-        printf(">> Limit exceeded\n");
-        return 0;
-    }
-
+    
     memset(&buf, 0x00, STR_MAX_LEN);
-    compose(msg, &buf, &buf_size);  
-    printf("SENDING >>> \n");
-    lprintf(buf, buf_size);  
+    if (protocol == e_udp) {
+        compose_udp(msg, &buf, &buf_size);  
+    } else {
+        compose_tcp(msg, &buf, &buf_size);  
+    }
     if (protocol == e_udp) {
         if (udp_send(buf, buf_size)) { return errno; }
     } else {
@@ -98,8 +92,6 @@ int client_read(t_string * buf, int * buf_size) {
     } else {
         if (tcp_read(buf, buf_size)) { return errno; }
     }
-    printf("RECEIVING >>> \n");
-    lprintf(*buf, *buf_size);
     return 0;
 }
 
@@ -113,7 +105,6 @@ int udp_client() {
     if (socket_fd <= 0) {
         return errno = printErrMsg(err_socket_creation_failed, __LINE__, __FILE__, NULL);
     }
-
     return 0;
 }
 
@@ -129,16 +120,21 @@ int udp_read(t_string * buf, int * buf_size) {
 }
 
 int tcp_send(t_string buf, int buf_size) {
-
+    send(socket_fd, buf, buf_size, 0);
     return 0;
 }
 
-int tcp_client(t_argv argv) {
-
+int tcp_client() {
+    if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        return errno = printErrMsg(err_socket_creation_failed, __LINE__, __FILE__, NULL);
+    }
+    if (connect(socket_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+        return errno = printErrMsg(err_connection_failed, __LINE__, __FILE__, NULL);
+    }
     return 0;
 }
 
 int tcp_read(t_string * buf, int * buf_size) {
-
+    *buf_size = read(socket_fd, buf, sizeof(*buf));
     return 0;
 }

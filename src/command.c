@@ -136,6 +136,7 @@ int validate_channelid(t_string channelid) {
         return warn_channelid_len_exceeded;
     }
     for (size_t i = 0; i < strlen(channelid); i++) {
+        // '.' dot was added so client can join ds channels
         if (channelid[i] != '.' && channelid[i] != '-' && (channelid[i] < 'A' || channelid[i] > 'Z') && (channelid[i] < 'a' || channelid[i] > 'z') && (channelid[i] < '0' || channelid[i] > '9')) {
             printWarnMsg(warn_channelid_char_forbidden, __LINE__, __FILE__, NULL);
             return warn_channelid_char_forbidden;
@@ -219,7 +220,6 @@ int exec_join(t_command cmd, t_msg * msg) {
     msg->id = client_msg_count++;
     memcpy(msg->content.join.channel_id, cmd.content.join.channel_id, STR_MAX_LEN);
     memcpy(msg->content.auth.display_name, user.display_name, STR_MAX_LEN);
-
     memcpy(user.channel_id, cmd.content.join.channel_id, STR_MAX_LEN);
 
     return 0;

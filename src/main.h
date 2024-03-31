@@ -143,6 +143,20 @@ int received_err(t_msg msg);
 int process_timeouts(int time_delta);
 
 /**
+ * @brief Sends message saying that last received message is corrupted
+ * 
+ * @return int 
+ */
+int send_error();
+
+/**
+ * @brief Sends bye message to the server. If communication hasn't been started yet-> stops program with current errno
+ * 
+ * @return int Result code 
+ */
+int send_bye();
+
+/**
  * @brief Hadler for sigint signal
  * 
  * @param signal Signal received from the system

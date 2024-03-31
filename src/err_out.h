@@ -19,13 +19,15 @@ typedef enum {
     err_memory_alloc = 2,
     // Arguments
     err_malformed_arguments = 101,
-    // UDP client
+    // Client
     err_socket_creation_failed = 201,
     err_host_not_found = 202,
     err_retransmission_number_exceeded = 203,
+    err_connection_failed = 204,
     // Parser
     err_msg_null = 401,
     err_msg_type_unknown = 402,
+    err_msg_parse_failed = 403,
     // Command
     err_cmd_corrupted = 501,
     err_command_not_found = 502
@@ -52,7 +54,8 @@ typedef enum {
     warn_displayname_char_forbidden = 513,
     warn_message_char_forbidden = 514,
     // State
-    warn_invalid_state_transition = 601
+    warn_invalid_state_transition = 601,
+    warn_invalid_state_transition_serv = 602
 } warning_code;
 
 /**
