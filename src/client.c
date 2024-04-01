@@ -36,38 +36,6 @@ int client(t_argv argv, int * fd) {
     return 0;
 }
 
-void lprintf(t_string str, int len) {
-    for (int i = 0;i < (len / 8)+1-(len%8 == 0); i++) {
-        for (int j = 0; j < 8; j++) {
-            if (j == 4) {
-                printf(" ");
-            }
-            if (i*8+j >= len) {
-                printf("   ");
-            } else {
-                printf("%02x ", (uint8_t) str[i*8+j]);
-            }
-        }
-        printf("| ");
-        for (int j = 0; j < 8; j++) {
-            if (j == 4) {
-                printf(" ");
-            }
-            if (i*8+j >= len) {
-                printf("   ");
-            } else {
-                if (str[i*8+j] < '!') {
-                    printf(".");
-                } else {
-                    printf("%c", str[i*8+j]);
-                }
-            }
-        }
-        printf("\n");
-    }
-    printf("\n");
-}
-
 int client_send(t_msg msg) {
     t_string buf;
     int buf_size;
@@ -78,8 +46,6 @@ int client_send(t_msg msg) {
     } else {
         compose_tcp(msg, &buf, &buf_size);  
     }
-    // printf("SENDING >>> \n");
-    // lprintf(buf, buf_size);  
     if (protocol == e_udp) {
         if (udp_send(buf, buf_size)) { return errno; }
     } else {
@@ -94,8 +60,6 @@ int client_read(t_string * buf, int * buf_size) {
     } else {
         if (tcp_read(buf, buf_size)) { return errno; }
     }
-    // printf("RECEIVING >>> \n");
-    // lprintf(*buf, *buf_size);
     return 0;
 }
 

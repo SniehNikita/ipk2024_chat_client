@@ -56,5 +56,5 @@ int argvParse(int argc, char **argv, t_argv *argv_p) {
 }
 
 void printHelp() {
-    printf("Usage: ipk24chat-client [-h] -t <tcp/udp> -s <IP/hostname> -p <port> -d <udp timeout> -r <maximum number of udp transmission>\n");
+    printf("Usage: ipk24chat-client \n\t[-h] \n\t-t <tcp/udp> \n\t-s <IP/hostname> \n\t-p <port> \n\t-d <udp timeout> \n\t-r <maximum number of udp transmission>\n");
 }

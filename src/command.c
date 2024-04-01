@@ -9,7 +9,7 @@
 
 int get_command(t_command * command) {
     t_string cmd;
-
+    
     memset(cmd, 0x00, STR_MAX_LEN);
     fgets(cmd, STR_MAX_LEN, stdin);
     cmd[strlen(cmd)-1] = '\0'; // Remove \n
